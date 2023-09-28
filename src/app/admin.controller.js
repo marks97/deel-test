@@ -26,6 +26,23 @@ class AdminController {
       throw new ServerError();
     }
   }
+
+  async getBestProfession({ start, end }) {
+    try {
+      const profession = await this.adminService.getBestProfession({
+        start,
+        end,
+      });
+
+      return {
+        payload: profession,
+      };
+    } catch (error) {
+      console.log('Error:', error);
+
+      throw new ServerError();
+    }
+  }
 }
 
 module.exports = AdminController;

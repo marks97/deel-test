@@ -45,7 +45,13 @@ const jobController = new JobController(jobService);
 const jobRoutesInstance = new JobRouter(jobController, getProfile);
 const jobRoutes = jobRoutesInstance.getRoutes();
 
-const adminService = new AdminService({ sequelize, profileModel, jobService });
+const adminService = new AdminService({
+  sequelize,
+  profileModel,
+  contractModel,
+  jobModel,
+  jobService,
+});
 const adminController = new AdminController(adminService);
 const adminRoutesInstance = new AdminRouter(adminController, getProfile);
 const adminRoutes = adminRoutesInstance.getRoutes();
