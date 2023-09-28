@@ -1,10 +1,24 @@
-const getProfileMiddleware = async (req, res, next) => {
-  const { Profile } = req.app.get('models');
-  const profile = await Profile.findOne({
-    where: { id: req.get('profile_id') || 0 },
-  });
-  if (!profile) return res.status(401).end();
-  req.profile = profile;
-  return next();
+const getProfileMiddleware = profileService => {
+  return async (req, res, next) => {
+    try {
+      const profileId = req.get('profile_id') || 0;
+      const profile = await profileService.getProfileById(profileId);
+
+      if (!profile) {
+        return res.status(401).send('Unauthorized');
+      }
+
+      req.profile = profile;
+
+      return next();
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+
+      return next(error);
+    }
+  };
 };
-module.exports = { getProfile: getProfileMiddleware };
+
+module.exports = {
+  getProfileMiddleware,
+};

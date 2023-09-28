@@ -22,4 +22,7 @@ Job.belongsTo(Contract);
 
 module.exports = {
   sequelize,
+  Profile,
+  Contract,
+  Job,
 };
