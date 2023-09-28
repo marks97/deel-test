@@ -50,7 +50,7 @@ class ContractController {
       console.log('Error:', error);
 
       if (error instanceof NotFoundError) {
-        throw new NotFoundError();
+        throw error;
       }
 
       throw new ServerError();

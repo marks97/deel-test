@@ -6,10 +6,10 @@ class JobController {
     this.jobService = jobService;
   }
 
-  async getUnpaidJobsForActiveContracts({ profile }) {
+  async getUnpaidJobsForActiveContracts({ profileId }) {
     try {
       const jobs = await this.jobService.getUnpaidJobsForActiveContracts({
-        profile,
+        profileId,
       });
 
       return {

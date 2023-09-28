@@ -25,9 +25,9 @@ class JobRouter {
 
   async getUnpaidJobsForActiveContracts(req, res, next) {
     try {
-      const { profile } = req;
+      const { profileId } = req.profile;
       const jobRes = await this.jobController.getUnpaidJobsForActiveContracts({
-        profile,
+        profileId,
       });
       res.status(200).json(jobRes);
     } catch (error) {

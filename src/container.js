@@ -11,6 +11,10 @@ const {
 
 const ProfileService = require('./infra/services/profile.service');
 
+const AdminService = require('./infra/services/admin.service');
+const AdminController = require('./app/admin.controller');
+const AdminRouter = require('./interface/admin.router');
+
 const JobService = require('./infra/services/job.service');
 const JobController = require('./app/job.controller');
 const JobRouter = require('./interface/job.router');
@@ -41,9 +45,15 @@ const jobController = new JobController(jobService);
 const jobRoutesInstance = new JobRouter(jobController, getProfile);
 const jobRoutes = jobRoutesInstance.getRoutes();
 
+const adminService = new AdminService({ sequelize, profileModel, jobService });
+const adminController = new AdminController(adminService);
+const adminRoutesInstance = new AdminRouter(adminController, getProfile);
+const adminRoutes = adminRoutesInstance.getRoutes();
+
 const routes = {
   contractRoutes,
   jobRoutes,
+  adminRoutes,
 };
 
 module.exports = routes;

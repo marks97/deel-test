@@ -10,9 +10,7 @@ class JobService {
     this.profileModel = profileModel;
   }
 
-  async getUnpaidJobsForActiveContracts({ profile }) {
-    const { id: profileId } = profile;
-
+  async getUnpaidJobsForActiveContracts({ profileId }) {
     return this.jobModel.findAll({
       where: {
         paid: null,
@@ -27,6 +25,24 @@ class JobService {
         },
       ],
     });
+  }
+
+  async getUnpaidJobSum({ profileId }) {
+    const sum = await this.jobModel.sum('price', {
+      where: {
+        paid: null,
+      },
+      include: [
+        {
+          model: this.contractModel,
+          where: {
+            [Op.or]: [{ ContractorId: profileId }, { ClientId: profileId }],
+          },
+        },
+      ],
+    });
+
+    return sum || 0;
   }
 
   async payJob({ jobId }) {
