@@ -15,10 +15,12 @@ class ContractRouter {
       this.getProfileMiddleware,
       this.getContractById.bind(this),
     );
-  }
 
-  getRoutes() {
-    return this.router;
+    this.router.get(
+      '',
+      this.getProfileMiddleware,
+      this.getActiveContracts.bind(this),
+    );
   }
 
   async getContractById(req, res, next) {
@@ -33,6 +35,22 @@ class ContractRouter {
     } catch (error) {
       next(error);
     }
+  }
+
+  async getActiveContracts(req, res, next) {
+    try {
+      const { profile } = req;
+      const contractRes = await this.contractController.getActiveContracts({
+        profile,
+      });
+      res.status(200).json(contractRes);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  getRoutes() {
+    return this.router;
   }
 }
 
