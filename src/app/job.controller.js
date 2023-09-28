@@ -1,4 +1,5 @@
 const ServerError = require('../infra/errors/server.error');
+const BaseError = require('../infra/errors/base.error');
 
 class JobController {
   constructor(jobService) {
@@ -16,6 +17,26 @@ class JobController {
       };
     } catch (error) {
       console.log('Error:', error);
+
+      throw new ServerError();
+    }
+  }
+
+  async payJob({ profile, jobId }) {
+    try {
+      await this.jobService.payJob({ profile, jobId });
+
+      return {
+        payload: {
+          message: 'Job paid successfully',
+        },
+      };
+    } catch (error) {
+      console.log('Error:', error);
+
+      if (error instanceof BaseError) {
+        throw error;
+      }
 
       throw new ServerError();
     }

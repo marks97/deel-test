@@ -3,6 +3,7 @@ const {
 } = require('./infra/middleware/get-profile.middleware');
 
 const {
+  sequelize,
   Profile: profileModel,
   Contract: contractModel,
   Job: jobModel,
@@ -30,7 +31,12 @@ const contractRoutesInstance = new ContractRouter(
 );
 const contractRoutes = contractRoutesInstance.getRoutes();
 
-const jobService = new JobService(jobModel, contractModel);
+const jobService = new JobService({
+  sequelize,
+  jobModel,
+  contractModel,
+  profileModel,
+});
 const jobController = new JobController(jobService);
 const jobRoutesInstance = new JobRouter(jobController, getProfile);
 const jobRoutes = jobRoutesInstance.getRoutes();

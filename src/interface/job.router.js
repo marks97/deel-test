@@ -15,16 +15,36 @@ class JobRouter {
       this.getProfileMiddleware,
       this.getUnpaidJobsForActiveContracts.bind(this),
     );
+
+    this.router.post(
+      '/:job_id/pay',
+      this.getProfileMiddleware,
+      this.payJob.bind(this),
+    );
   }
 
   async getUnpaidJobsForActiveContracts(req, res, next) {
     try {
       const { profile } = req;
-      const contractRes =
-        await this.jobController.getUnpaidJobsForActiveContracts({
-          profile,
-        });
-      res.status(200).json(contractRes);
+      const jobRes = await this.jobController.getUnpaidJobsForActiveContracts({
+        profile,
+      });
+      res.status(200).json(jobRes);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async payJob(req, res, next) {
+    try {
+      const { profile } = req;
+      const { job_id: jobId } = req.params;
+
+      const payRes = await this.jobController.payJob({
+        profile,
+        jobId,
+      });
+      res.status(200).json(payRes);
     } catch (error) {
       next(error);
     }
