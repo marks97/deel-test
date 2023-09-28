@@ -6,9 +6,16 @@ class ContractController {
     this.contractService = contractService;
   }
 
-  async getContractById(id) {
+  async getContractById({ profile, contractId }) {
     try {
-      const contract = await this.contractService.getContractById(id);
+      const contract = await this.contractService.getContractById({
+        profile,
+        contractId,
+      });
+
+      if (!contract) {
+        throw new NotFoundError();
+      }
 
       return {
         payload: contract,

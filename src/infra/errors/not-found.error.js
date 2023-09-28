@@ -1,4 +1,4 @@
-const { BaseError } = require('sequelize');
+const BaseError = require('./base.error');
 
 class NotFoundError extends BaseError {
   constructor() {

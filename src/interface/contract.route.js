@@ -23,8 +23,12 @@ class ContractRouter {
 
   async getContractById(req, res, next) {
     try {
-      const { id } = req.params;
-      const contractRes = await this.contractController.getContractById(id);
+      const { id: contractId } = req.params;
+      const { profile } = req;
+      const contractRes = await this.contractController.getContractById({
+        profile,
+        contractId,
+      });
       res.status(200).json(contractRes);
     } catch (error) {
       next(error);
