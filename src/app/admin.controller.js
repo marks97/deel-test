@@ -40,6 +40,32 @@ class AdminController {
     } catch (error) {
       console.log('Error:', error);
 
+      if (error instanceof NotFoundError || error instanceof BaseError) {
+        throw error;
+      }
+
+      throw new ServerError();
+    }
+  }
+
+  async getBestClients({ start, end, limit }) {
+    try {
+      const bestClients = await this.adminService.getBestClients({
+        start,
+        end,
+        limit,
+      });
+
+      return {
+        payload: bestClients,
+      };
+    } catch (error) {
+      console.log('Error:', error);
+
+      if (error instanceof NotFoundError || error instanceof BaseError) {
+        throw error;
+      }
+
       throw new ServerError();
     }
   }

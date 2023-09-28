@@ -80,6 +80,48 @@ class AdminService {
 
     return profession;
   }
+
+  async getBestClients({ start, end, limit = 2 }) {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    const results = await this.jobModel.findAll({
+      where: {
+        paid: { [Op.ne]: null },
+        createdAt: {
+          [Op.between]: [startDate, endDate],
+        },
+      },
+      include: [
+        {
+          model: this.contractModel,
+          include: [
+            {
+              model: this.profileModel,
+              as: 'Client',
+              attributes: ['id', 'firstName', 'lastName'],
+            },
+          ],
+          attributes: [],
+        },
+      ],
+      attributes: [
+        [Sequelize.col('Contract.Client.id'), 'id'],
+        [Sequelize.fn('SUM', Sequelize.col('Job.price')), 'paid'],
+        [Sequelize.col('Contract.Client.firstName'), 'firstName'],
+        [Sequelize.col('Contract.Client.lastName'), 'lastName'],
+      ],
+      group: [Sequelize.col('Contract.Client.id')],
+      order: [[Sequelize.col('paid'), 'DESC']],
+      limit,
+    });
+
+    return results.map(({ dataValues: client }) => ({
+      id: client.id,
+      fullName: `${client.firstName} ${client.lastName}`,
+      paid: client.paid,
+    }));
+  }
 }
 
 module.exports = AdminService;

@@ -11,6 +11,7 @@ class AdminRouter {
   initRoutes() {
     this.router.post('/balances/deposit/:id', this.depositBalance.bind(this));
     this.router.get('/best-profession', this.getBestProfession.bind(this));
+    this.router.get('/best-clients', this.getBestClients.bind(this));
   }
 
   async depositBalance(req, res, next) {
@@ -35,6 +36,22 @@ class AdminRouter {
       const response = await this.adminController.getBestProfession({
         start,
         end,
+      });
+
+      res.status(200).json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getBestClients(req, res, next) {
+    const { start, end, limit } = req.query;
+
+    try {
+      const response = await this.adminController.getBestClients({
+        start,
+        end,
+        limit,
       });
 
       res.status(200).json(response);
